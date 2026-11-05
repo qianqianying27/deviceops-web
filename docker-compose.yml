@@ -1,0 +1,28 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    environment:
+      PORT: 3000
+      JWT_SECRET: change-me-in-production
+      DB_FILE: data/deviceops.db
+      KB_DIR: data/kb
+      MQTT_PORT: 1883
+      SIMULATE: "1"
+    volumes:
+      - deviceops-data:/app/server/data
+    ports:
+      - "3000:3000"
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    depends_on:
+      - server
+    ports:
+      - "8080:80"
+
+volumes:
+  deviceops-data:
